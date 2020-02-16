@@ -42,7 +42,7 @@ def farsi_to_english_digit(number_string):
 
 
 def register_post_validator(post):
-    for field_name in ['first_name', 'last_name', 'father_first_name', 'national_id', 'phone_number', 'parent_phone_number', 'school_name', 'school_grade', 'territory', 'programming_familiar', 'special_state']:
+    for field_name in ['first_name', 'last_name', 'father_first_name', 'national_id', 'phone_number', 'parent_phone_number', 'school_name', 'school_grade', 'territory', 'programming_familiar', 'special_state','birth_year', 'birth_month', 'birth_day']:
         if field_name not in post:
             return f"field {field_name} missing from request"
 
@@ -52,21 +52,25 @@ def register_post_validator(post):
 
 
     if len(post['national_id']) != 10:
-        return "short or long national_id"
+        return "طول کد ملی نا معتبر است"
 
     for digit in post["national_id"]:
         if digit not in "0123456789۰۱۲۳۴۵۶۷۸۹":
-            return "non numerical national_id"
+            return "فرمت ناصحیح کد ملی"
 
     for digit in post['phone_number']:
         if digit not in "0123456789۰۱۲۳۴۵۶۷۸۹+":
-            return "non numerical phone_number"
+            return "فرمت ناصحیح شماره تلفن"
+
+    for digit in post['parent_phone_number']:
+        if digit not in "0123456789۰۱۲۳۴۵۶۷۸۹+":
+            return "فرمت ناصحیح شماره تلفن والدین"
 
     if  post['territory'] not in ['1','2','3','4']:
-        return "bad school field format"
+        return "فرمت ناصحیح ناحیه"
 
     if post['school_grade'] not in [str(n) for n in range(1,13)]:
-        return "bad school grade format"
+        return "فرمت ناصحیح سال تحصیلی"
     return False # no error massage
 
 #$ check national id
