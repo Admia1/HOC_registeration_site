@@ -127,12 +127,13 @@ def home_view(request):
 
 def verify_view(request):
     MERCHANT = secret.MERCHANT
+    template = 'registeration/message.html'
     if request.GET.get('Status') == 'OK':
         authority = request.GET['Authority']
         try:
             invoice = Invoice.objects.get(authority=authority)
         except:
-            return HttpResponse("خطایی رخ داده است")
+            return render(request,template,{'message': 'خطایی رخ داده است'})
 
         client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
         result = client.service.PaymentVerification(MERCHANT, invoice.authority, invoice.amount)
@@ -147,13 +148,13 @@ def verify_view(request):
             for o_invoice in Invoice.objects.filter(person=invoice.person, event=invoice.event, active=1, paid=0):
                 o_invoice.active=0
                 o_invoice.save()
-            return HttpResponse("ثبت نام شما با موفقیت به پایان رسید")
+            return render(request,template,{'message': "ثبت نام شما با موفقیت به پایان رسید"})
 
         else:
             #failed to pay
-            return HttpResponse("پرداخت نا موفق")
+            return render(request,template,{'message':"پرداخت نا موفق"})
 
-    return HttpResponse("پرداخت نا موفق")
+    return render(request,template,{'message':"پرداخت نا موفق"})
 
 
 def purchase_view(request, event_pk, person):
