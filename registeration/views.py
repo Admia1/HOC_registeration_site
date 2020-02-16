@@ -192,7 +192,7 @@ def send_to_zarin(request, invoice):
     if result.Status == 100:
         invoice.authority = result.Authority
         invoice.save()
-        return redirect('https://www.zarinpal.com/pg/StartPay/' + str(result.Authority))
+        return redirect(f'https://www.zarinpal.com/pg/StartPay/{result.Authority}/ZarinGate' )
     else:
         invoice.active = 0
         invoice.save()
